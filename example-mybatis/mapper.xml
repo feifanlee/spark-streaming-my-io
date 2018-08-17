@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.github.feifanlee">
+    <!--<resultMap id="userMap" type="User" >-->
+        <!--<id property="userId" column="user_id" javaType="int"></id>-->
+        <!--<result property="userName" column="user_name" javaType="java.lang.String"/>-->
+        <!--<result property="userPwd" column="user_pwd" javaType="java.lang.String"/>-->
+    <!--</resultMap>-->
+
+    <!--<resultMap id="userAndInfo" type="User" >-->
+        <!--<id property="userId" column="user_id" javaType="int"></id>-->
+        <!--<result property="userName" column="user_name" javaType="java.lang.String"/>-->
+        <!--<result property="userPwd" column="user_pwd" javaType="java.lang.String"/>-->
+        <!--<association property="info" column="user_id" javaType="UserInfo"-->
+                     <!--select="com.wode.mapper.UserInfoMapper.findUserInfoById"></association>-->
+    <!--</resultMap>-->
+
+    <!--<insert id="addUser" parameterType="User"  useGeneratedKeys="true">-->
+
+        <!--insert into users(user_name,user_pwd) values(#{user.userName},#{user.userPwd})-->
+    <!--</insert>-->
+    <!--<select id="findUserById" resultMap="userMap" parameterType="int">-->
+        <!--select * from users where user_id=#{id}-->
+    <!--</select>-->
+
+    <!--<select id="findUserAndInfoById" resultMap="userAndInfo" parameterType="int">-->
+        <!--select * from users where user_id=#{id}-->
+    <!--</select>-->
+    <insert id="repTest" parameterType="java.util.Map">
+        replace into reptest  (col1,col2,col3) values (#{col1,jdbcType=INTEGER},#{col2,jdbcType=INTEGER},#{col3,jdbcType=INTEGER})
+    </insert>
+</mapper>

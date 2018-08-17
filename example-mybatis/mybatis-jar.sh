@@ -1,0 +1,1 @@
+jar -cvf mybatis-config.jar mybatis.xml mapper.xml
