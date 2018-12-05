@@ -2,7 +2,7 @@ package com.github.feifanlee
 
 import com.github.feifanlee.mapper.MapperBuilder
 import com.github.feifanlee.outer.OuterBuilder
-import com.github.feifanlee.util.MybatisUtil
+import com.github.feifanlee.util.{ConfigUtil, MybatisUtil}
 import com.sun.jersey.api.json.JSONConfiguration.MappedBuilder
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.{Seconds, StreamingContext}
@@ -13,11 +13,18 @@ import org.apache.spark.streaming.kafka.KafkaUtils
   */
 object App {
     def main(args: Array[String]): Unit = {
-        val zk = args(0)
-        val topic = args(1)
-        val groupid = args(2)
-        val partitions = args(3).toInt
-        val window = args(4).toInt
+//        val zk = args(0)
+//        val topic = args(1)
+//        val groupid = args(2)
+//        val partitions = args(3).toInt
+//        val window = args(4).toInt
+
+        val props = ConfigUtil.getProps
+        val zk = props.getProperty("in.kafka.zookeeper")
+        val topic = props.getProperty("in.kafka.topic")
+        val groupid = props.getProperty("in.kafka.groupid")
+        val partitions = props.getProperty("in.kafka.partitions").toInt
+        val window = props.getProperty("in.kafka.window").toInt
 
         val conf = new SparkConf().setAppName("StreamingApp")
 //                .set("spark.serializer","org.apache.spark.serializer.KryoSerialization")
@@ -37,7 +44,7 @@ object App {
                     outer.init()
                     kvlist.foreach(kv=>{
                         val value = kv._2
-                        val map = mapper.toMap(value)
+                        val map = mapper.toJMap(value)
                         outer.out(map)
                     })
                     outer.close()

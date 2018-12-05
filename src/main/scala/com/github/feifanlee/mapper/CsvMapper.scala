@@ -7,7 +7,7 @@ import scala.collection.JavaConversions._
   * Created by lifeifan on 2018/8/16.
   */
 class CsvMapper(sep:String,meta:(List[String])=>java.util.Map[String,Object]) extends Mapper{
-    override def toMap(in: String): java.util.Map[String, Object] = {
+    override def toJMap(in: String): java.util.Map[String, Object] = {
         val data = in.split(sep)
         meta(data.toList)
     }

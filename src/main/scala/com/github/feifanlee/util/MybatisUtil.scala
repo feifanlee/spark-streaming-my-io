@@ -1,9 +1,5 @@
 package com.github.feifanlee.util
 
-import java.io.{File, FileInputStream}
-import java.util
-
-import com.github.feifanlee.util.mybatis.LocalSqlSessionFactoryBuilder
 import org.apache.ibatis.io.Resources
 import org.apache.ibatis.session.{SqlSession, SqlSessionFactory, SqlSessionFactoryBuilder}
 
@@ -25,7 +21,7 @@ object MybatisUtil {
             val factory = builder.build(is)
             factory
         }catch{
-            case e => println("Mybatis init failed:"+fileName)
+            case e => println("MybatMybatisis init failed:"+fileName)
                 throw e
                 null
         }
