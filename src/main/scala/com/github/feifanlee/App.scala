@@ -1,10 +1,12 @@
 package com.github.feifanlee
 
+import com.github.feifanlee.fitter.FitterBuilder
 import com.github.feifanlee.mapper.MapperBuilder
 import com.github.feifanlee.outer.OuterBuilder
 import com.github.feifanlee.util.{ConfigUtil, MybatisUtil}
 import com.sun.jersey.api.json.JSONConfiguration.MappedBuilder
 import org.apache.spark.SparkConf
+import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.streaming.kafka.KafkaUtils
 
@@ -30,22 +32,25 @@ object App {
 //                .set("spark.serializer","org.apache.spark.serializer.KryoSerialization")
 //                .registerKryoClasses()
         val ssc = new StreamingContext(conf, Seconds(window))
+        ssc.checkpoint(props.getProperty("in.kafka.checkpoint.path"))
 
         var topics: Map[String, Int] = Map()
         topics = topics.updated(topic, partitions)
-        val stream = KafkaUtils.createStream(ssc, zk, groupid, topics)
-
+        val stream = KafkaUtils.createStream(ssc, zk, groupid, topics,StorageLevel.MEMORY_AND_DISK_SER)
+        stream.checkpoint(Seconds(props.getProperty("in.kafka.checkpoint.senconds").toInt))
         stream.foreachRDD(rdd=>{
             rdd.foreachPartition(part=>{
                 val kvlist = part.toList
                 if(!kvlist.isEmpty){
                     val mapper = MapperBuilder.build()
                     val outer = OuterBuilder.build()
+                    val fitter = FitterBuilder.build()
                     outer.init()
                     kvlist.foreach(kv=>{
                         val value = kv._2
                         val map = mapper.toJMap(value)
-                        outer.out(map)
+                        val line = fitter.fit(map)
+                        outer.out(line)
                     })
                     outer.close()
                 }

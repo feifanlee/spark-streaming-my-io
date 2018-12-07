@@ -2,6 +2,8 @@ spark-submit \
  --master local[*]\
  --conf spark.streaming.concurrentJobs=3\
  --conf spark.streaming.receiver.maxRate=300\
+ --conf spark.streaming.receiver.writeAheadLog.enable=true\
+ --conf spark.streaming.stopGracefullyOnShutdown=true\
  --jars mybatis-config.jar,lib/mybatis-3.4.4.jar,lib/mysql-connector-java-5.1.42.jar\
  --files my-io-config.properties\
  --class com.github.feifanlee.App \
