@@ -11,6 +11,7 @@ object MapperBuilder {
         prop.getProperty("mapper.class") match {
             case "csv"=> CsvMapper.apply(prop)
             case "json"=> JsonMapper.apply()
+            case "avrojson"=> AvrojsonMapper.apply()
             case null=> new BaseMapper()
             case clz:String=> Class.forName(clz).asSubclass(classOf[Mapper]).newInstance()
             case _=> new BaseMapper()

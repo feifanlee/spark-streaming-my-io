@@ -6,6 +6,7 @@ import com.github.feifanlee.util.HbaseUtil
 import com.github.feifanlee.util.HbaseUtil._
 import org.apache.hadoop.hbase.TableName
 import org.apache.hadoop.hbase.client.{Put, Table}
+import org.apache.hadoop.hbase.util.Bytes
 
 import scala.collection.JavaConversions._
 
@@ -22,9 +23,9 @@ class HbaseOuter(table:String,cf:Array[Byte],rowkey:String) extends Outer{
 
     override def out(line: util.Map[String, Object]): Unit = {
         val id = getRowkey(line)
-        val put = new Put(id.getBytes)
+        val put = new Put(id.toBytes)
         line.entrySet().foreach(kv=>{
-            put.addColumn(cf,kv.getKey.getBytes,kv.getValue.toBytes)
+            put.addColumn(cf,kv.getKey.toBytes,kv.getValue.toBytes)
         })
         puts.add(put)
     }
@@ -38,7 +39,9 @@ class HbaseOuter(table:String,cf:Array[Byte],rowkey:String) extends Outer{
 
     private def getRowkey(implicit line: java.util.Map[String,Object]): String ={
         rowkey.split(",")
-            .map(key=>line.get(key))
+            .map(key=>{
+                line.getOrElse(key,"null").toString.trim
+            })
             .mkString("-")
     }
 }
@@ -48,6 +51,6 @@ object HbaseOuter{
         val table = props.getProperty("outer.hbase.table")
         val cf = props.getProperty("outer.hbase.cf")
         val rowkey = props.getProperty("outer.hbase.rowkey")
-        new HbaseOuter(table,cf.getBytes(),rowkey)
+        new HbaseOuter(table,cf.toBytes,rowkey)
     }
 }

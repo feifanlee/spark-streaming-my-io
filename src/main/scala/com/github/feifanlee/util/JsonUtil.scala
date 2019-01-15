@@ -12,4 +12,5 @@ object JsonUtil {
             mapper.readValue(json, classOf[java.util.HashMap[String, Object]])
         }
     }
+
 }

@@ -3,12 +3,12 @@ package com.github.feifanlee
 import com.github.feifanlee.fitter.FitterBuilder
 import com.github.feifanlee.mapper.MapperBuilder
 import com.github.feifanlee.outer.OuterBuilder
-import com.github.feifanlee.util.{ConfigUtil, MybatisUtil}
-import com.sun.jersey.api.json.JSONConfiguration.MappedBuilder
+import com.github.feifanlee.util.ConfigUtil
 import org.apache.spark.SparkConf
 import org.apache.spark.storage.StorageLevel
-import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.streaming.kafka.KafkaUtils
+import org.apache.spark.streaming.{Seconds, StreamingContext}
+import com.github.feifanlee.util.JavaUtil._
 
 /**
   * Created by lifeifan on 2018/8/16.
@@ -47,15 +47,21 @@ object App {
                     val fitter = FitterBuilder.build()
                     outer.init()
                     kvlist.foreach(kv=>{
-                        val value = kv._2
-                        val map = mapper.toJMap(value)
-                        val line = fitter.fit(map)
-                        outer.out(line)
+                        try {
+                            val value = kv._2
+                            val map = mapper.toJMap(value).lowwerKey
+                            val line = fitter.fit(map)
+                            outer.out(line)
+                        }catch {
+                            case e:Exception=>
+                                e.printStackTrace()
+                        }
                     })
                     outer.close()
                 }
             })
         })
+        stream.checkpoint(Seconds(props.getProperty("in.kafka.checkpoint.senconds").toInt))
 
         //        stream.print()
 
