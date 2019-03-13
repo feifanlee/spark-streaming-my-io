@@ -15,6 +15,7 @@ class CsvMapper(sep:String,meta:(List[String])=>java.util.Map[String,Object]) ex
 
 object CsvMapper{
     //col:typ,col:typ....
+    //TODO: extract to meta util
     def parseMeta(prop:String): (List[String])=>java.util.Map[String,Object] ={
         val meta = prop.split(",")
                 .map(kv=>(kv.split(":")(0),kv.split(":")(1)))

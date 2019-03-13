@@ -11,6 +11,7 @@ object OuterBuilder {
         prop.getProperty("outer.class") match {
             case "mybatis"=> MybatisOuter.apply(prop)
             case "hbase"=> HbaseOuter.apply(prop)
+            case "kudu"=> KuduOuter.apply(prop)
             case null => new BaseOuter
             case clz:String=> Class.forName(clz).asSubclass(classOf[Outer]).newInstance()
             case _ => new BaseOuter

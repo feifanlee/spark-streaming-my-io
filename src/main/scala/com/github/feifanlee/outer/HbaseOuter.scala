@@ -14,6 +14,7 @@ import scala.collection.JavaConversions._
   * Created by lifeifan on 2018/11/22.
   */
 class HbaseOuter(table:String,cf:Array[Byte],rowkey:String) extends Outer{
+    //table is not thread-safe
     var htable:Table = null
     var puts:java.util.ArrayList[Put] = null
     override def init(): Unit = {

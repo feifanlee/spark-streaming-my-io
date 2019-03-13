@@ -9,6 +9,7 @@ object FitterBuilder {
     def build(): Fitter ={
         val prop = ConfigUtil.getProps
         prop.getProperty("fitter.class") match {
+            case "tostring" => new TostringFitter
             case null => new BaseFitter
             case clz:String=> Class.forName(clz).asSubclass(classOf[Fitter]).newInstance()
             case _ => new BaseFitter

@@ -61,7 +61,7 @@ object App {
                 }
             })
         })
-        stream.checkpoint(Seconds(props.getProperty("in.kafka.checkpoint.senconds").toInt))
+        //stream.checkpoint(Seconds(props.getProperty("in.kafka.checkpoint.senconds").toInt))
 
         //        stream.print()
 
